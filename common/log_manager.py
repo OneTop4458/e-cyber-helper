@@ -68,7 +68,7 @@ class PocoLikeFormatter(logging.Formatter):
     usually includes time, level, and message.
     """
 
-    def __init__(self, fmt='%(asctime)s, %(hostname)s, %(process)d, %(thread)d, %(levelname)s, %(message)s',
+    def __init__(self, fmt='%(asctime)s, %(name)s, %(hostname)s, %(process)d, %(thread)d, %(levelname)s, %(message)s',
                  datefmt='%Y-%m-%d %H:%M:%S'):
         """
         Initializes the formatter with the given format and date format strings.
@@ -191,7 +191,7 @@ class LogManager:
         if not log_config:
             log_config = {
                 'level': 'INFO',
-                'format': '%(asctime)s, %(hostname)s, %(process)d, %(thread)d, %(levelname)s, %(message)s',
+                'format': '%(asctime)s, %(name)s, %(hostname)s, %(process)d, %(thread)d, %(levelname)s, %(message)s',
                 # Poco-like format
                 'file_path': 'app.log'
             }
