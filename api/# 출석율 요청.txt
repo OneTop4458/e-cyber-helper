@@ -1,0 +1,23 @@
+# 출석율 요청
+
+POST /ilos/st/course/attendance_list.acl HTTP/1.1
+Host: e-cyber.catholic.ac.kr
+Cookie: _language_=ko; JSESSIONID=4C040D1DD56F0E33E81CB0B3757B2D25; SCOUTER=z57kslen104h6k
+Content-Length: 44
+Sec-Ch-Ua: "Not=A?Brand";v="99", "Chromium";v="118"
+Accept: */*
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+X-Requested-With: XMLHttpRequest
+Sec-Ch-Ua-Mobile: ?0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.5993.90 Safari/537.36
+Sec-Ch-Ua-Platform: "Windows"
+Origin: https://e-cyber.catholic.ac.kr
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: cors
+Sec-Fetch-Dest: empty
+Referer: https://e-cyber.catholic.ac.kr/ilos/st/course/attendance_list_form.acl
+Accept-Encoding: gzip, deflate, br
+Accept-Language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+Connection: close
+
+ud=202322304&ky=A202330678871&encoding=utf-8

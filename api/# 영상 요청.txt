@@ -1,0 +1,24 @@
+# 영상 요청
+
+POST /ilos/st/course/online_view_form.acl HTTP/1.1
+Host: e-cyber.catholic.ac.kr
+Cookie: _language_=ko; JSESSIONID=4C040D1DD56F0E33E81CB0B3757B2D25; SCOUTER=z57kslen104h6k
+Content-Length: 79
+Cache-Control: max-age=0
+Sec-Ch-Ua: "Not=A?Brand";v="99", "Chromium";v="118"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "Windows"
+Upgrade-Insecure-Requests: 1
+Origin: https://e-cyber.catholic.ac.kr
+Content-Type: application/x-www-form-urlencoded
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.5993.90 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Dest: document
+Referer: https://e-cyber.catholic.ac.kr/ilos/st/course/online_list_form.acl
+Accept-Encoding: gzip, deflate, br
+Accept-Language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+Connection: close
+
+lecture_weeks=19&WEEK_NO=10&_KJKEY=A202330701401&kj_lect_type=1&item_id=&force=
