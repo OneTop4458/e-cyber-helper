@@ -11,6 +11,8 @@ Dependencies:
 - logging.handlers
 - sys
 - os
+- socket
+- threading
 - traceback
 - ctypes
 - datetime
@@ -51,9 +53,48 @@ import sys
 import os
 import traceback
 import ctypes
+import socket
+import threading
 from datetime import datetime
 from common.config_manager import ConfigManager
 from PIL import ImageGrab
+
+
+class PocoLikeFormatter(logging.Formatter):
+    """
+    Custom formatter to mimic the logging format of a given logging system (Poco).
+
+    The formatter adds hostname and thread id to the standard logging output, which
+    usually includes time, level, and message.
+    """
+
+    def __init__(self, fmt='%(asctime)s, %(name)s, %(hostname)s, %(process)d, %(thread)d, %(levelname)s, %(message)s',
+                 datefmt='%Y-%m-%d %H:%M:%S'):
+        """
+        Initializes the formatter with the given format and date format strings.
+        """
+        super().__init__(fmt, datefmt)
+
+    def formatTime(self, record, datefmt=None):
+        """
+        Override formatTime to use datetime instead of time.
+        """
+        if datefmt:
+            return datetime.fromtimestamp(record.created).strftime(datefmt)
+        else:
+            return datetime.fromtimestamp(record.created).isoformat(timespec='milliseconds')
+
+    def format(self, record):
+        """
+        Formats the logging record using the defined format string.
+        """
+        # Adding hostname to the record
+        record.hostname = socket.gethostname()
+        # Adding thread ID to the record (process ID is already included in LogRecord)
+        record.thread = threading.get_ident()
+        # Call the original format method to generate the formatted log message
+        return super().format(record)
+
 
 class StreamToLogger:
     """
@@ -95,6 +136,7 @@ class StreamToLogger:
         Flushes the stream. This is a no-op for this implementation.
         """
         pass
+
 
 class LogManager:
     """
@@ -140,6 +182,7 @@ class LogManager:
     def _load_log_config(self):
         """
         Loads and applies the logging configuration from the ConfigManager.
+        Now with Poco-like format.
 
         Raises:
             ValueError: If the log configuration is invalid.
@@ -148,7 +191,8 @@ class LogManager:
         if not log_config:
             log_config = {
                 'level': 'INFO',
-                'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                'format': '%(asctime)s, %(name)s, %(hostname)s, %(process)d, %(thread)d, %(levelname)s, %(message)s',
+                # Poco-like format
                 'file_path': 'app.log'
             }
             self.config_manager.update_config('log_config', log_config)
@@ -156,8 +200,15 @@ class LogManager:
         self._validate_log_config(log_config)
 
         log_level = getattr(logging, log_config['level'].upper(), logging.INFO)
-        logging.basicConfig(level=log_level, format=log_config['format'],
-                            handlers=[logging.FileHandler(log_config['file_path'])])
+
+        # Logging handlers setup
+        log_handler = logging.FileHandler(log_config['file_path'])
+        formatter = PocoLikeFormatter()
+        log_handler.setFormatter(formatter)
+
+        logging.basicConfig(level=log_level,
+                            format=log_config['format'],
+                            handlers=[log_handler])
 
     def get_logger(self, name):
         """

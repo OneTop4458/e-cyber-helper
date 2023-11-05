@@ -125,7 +125,7 @@ class SQLiteManager:
             columns = ', '.join(data.keys())
             placeholders = ', '.join(['?'] * len(data))
             encrypted_values = tuple(
-                base64.b64encode(self.config_manager._encrypt(str(value)).encode()) for value in data.values()
+                base64.b64encode(self.config_manager.encrypt(str(value)).encode()) for value in data.values()
             )
             query = f'INSERT INTO {table} ({columns}) VALUES ({placeholders})'
             self.execute_query(query, encrypted_values, commit=True)
@@ -184,7 +184,7 @@ class SQLiteManager:
                 if value is not None and isinstance(value, bytes):
                     try:
                         decoded_value = base64.b64decode(value).decode()
-                        decrypted_value = self.config_manager._decrypt(decoded_value)
+                        decrypted_value = self.config_manager.decrypt(decoded_value)
                     except Exception as e:
                         raise ValueError(f"Error decrypting value for {key}: {e}")
                     decrypted_row[key] = decrypted_value
@@ -208,7 +208,7 @@ class SQLiteManager:
         try:
             set_clause = ', '.join([f"{k}=?" for k in data])
             encrypted_values = tuple(
-                base64.b64encode(self.config_manager._encrypt(str(value)).encode()) for value in data.values()
+                base64.b64encode(self.config_manager.encrypt(str(value)).encode()) for value in data.values()
             )
             where_clause = ' AND '.join([f"{k}=?" for k in conditions])
             query = f'UPDATE {table} SET {set_clause} WHERE {where_clause}'
