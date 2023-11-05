@@ -58,8 +58,8 @@ class ConfigManager:
         __init__(self, config_path, password=None, reset_key=False): Constructor for the class.
         _get_or_create_key(self, password, reset_key): Gets an existing or creates a new encryption key.
         _generate_key(self, password, salt): Generates an encryption key using a password and salt.
-        _encrypt(self, data): Encrypts data before saving to the configuration file.
-        _decrypt(self, data): Decrypts data loaded from the configuration file.
+        encrypt(self, data): Encrypts data before saving to the configuration file.
+        decrypt(self, data): Decrypts data loaded from the configuration file.
         load_config(self): Loads and decrypts configuration data from the file.
         save_config(self, config_data): Encrypts and saves the configuration data to the file.
         update_config(self, key, value): Updates a configuration key with a new value in the file.
@@ -126,7 +126,7 @@ class ConfigManager:
         key = base64.urlsafe_b64encode(kdf.derive(password.encode()))  # 비밀번호와 Salt를 사용하여 키 생성
         return key
 
-    def _encrypt(self, data):
+    def encrypt(self, data):
         """
         Encrypts the provided data using Fernet encryption.
 
@@ -151,7 +151,7 @@ class ConfigManager:
             sys.stderr.write(f'Encryption failed: {e}\n')
         return data
 
-    def _decrypt(self, data):
+    def decrypt(self, data):
         """
         Decrypts the provided data using Fernet encryption.
 
@@ -187,7 +187,7 @@ class ConfigManager:
                 config_data = yaml.safe_load(file)
                 if config_data is None:
                     return {}  # 파일이 비어 있는 경우 빈 딕셔너리 반환
-                decrypted_data = {key: self._decrypt(str(value)) for key, value in config_data.items()}
+                decrypted_data = {key: self.decrypt(str(value)) for key, value in config_data.items()}
                 return {key: yaml.safe_load(value) if isinstance(value, str) else value for key, value in decrypted_data.items()}
         except Exception as e:
             sys.stderr.write(f'Failed to load config: {e}\n')
@@ -207,7 +207,7 @@ class ConfigManager:
             existing_data = self.load_config()
             merged_data = {**existing_data, **config_data}
             str_data = {key: yaml.dump(value) if isinstance(value, (dict, list)) else str(value) for key, value in merged_data.items()}
-            encrypted_data = {key: self._encrypt(value) for key, value in str_data.items()}
+            encrypted_data = {key: self.encrypt(value) for key, value in str_data.items()}
             with open(self.config_path, 'w') as file:
                 yaml.safe_dump(encrypted_data, file)
         except Exception as e:

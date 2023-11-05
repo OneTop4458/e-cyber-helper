@@ -46,7 +46,7 @@ def sample_usage():
         thread_manager.start_thread(tid)
 
     # 일정 시간 작업을 수행하고...
-    time.sleep(10)
+    time.sleep(5)
 
     # 각각의 스레드 중지
     for tid in thread_ids:
